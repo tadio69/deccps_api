@@ -1,0 +1,21 @@
+{
+  "name": "deccpaysystem-api",
+  "version": "1.0.0",
+  "description": "API REST de gestion des états de paiement de la DECC",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "chijou nengou",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1",
+    "mariadb": "^3.4.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7"
+  }
+}
