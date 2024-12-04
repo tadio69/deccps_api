@@ -1,8 +1,9 @@
 const { Region } =require('../db/sequelize')
 const { Op } = require('sequelize') 
+const auth = require('../auth/auth') 
 
 module.exports = (app) => {
-  app.get('/api/regions', (req, res) => {
+  app.get('/api/regions', auth, (req, res) => {
     if(req.query.nom){
       const nom = req.query.nom
 

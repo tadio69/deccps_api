@@ -1,8 +1,9 @@
 const { Region } = require('../db/sequelize')
 const { ValidationError, UniqueConstraintError } = require('sequelize')
+const auth = require('../auth/auth') 
 
 module.exports = (app) => {
-  app.post('/api/regions', (req, res) => {
+  app.post('/api/regions', auth, (req, res) => {
     Region.create(req.body)
       .then(region => {
         const message = `La région ${req.body.nom} a bien été créée.`

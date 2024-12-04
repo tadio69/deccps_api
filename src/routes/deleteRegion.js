@@ -1,7 +1,8 @@
 const { Region } = require('../db/sequelize')
+const auth = require('../auth/auth') 
 
 module.exports = (app) => {
-  app.delete('/api/regions/:id', (req, res) => {
+  app.delete('/api/regions/:id', auth, (req, res) => {
     Region.findByPk(req.params.id).then(region => {
       if(region === null){
         const message = 'La région demandée n\'existe pas. Réessayez avec un autre identifiant.'

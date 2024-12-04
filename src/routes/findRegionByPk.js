@@ -1,7 +1,8 @@
 const { Region } = require('../db/sequelize')
+const auth = require('../auth/auth') 
 
 module.exports = (app) => {
-  app.get('/api/regions/:id', (req, res) => {
+  app.get('/api/regions/:id', auth, (req, res) => {
     Region.findByPk(req.params.id)
       .then(region => {
         if(region === null){
