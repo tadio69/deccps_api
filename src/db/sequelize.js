@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require ('sequelize')
 const RegionModel = require('../models/region')
 const UserModel = require('../models/user')
+const FonctionModel = require('../models/fonction')
+const PersonnelModel = require('../models/personnel')
 const regions = require('./regions')
 const bcrypt = require('bcrypt')
 
@@ -38,6 +40,8 @@ if(process.env.NODE_ENV === 'production'){
 
 const Region = RegionModel(sequelize, DataTypes)
 const User = UserModel(sequelize, DataTypes)
+const Fonction = FonctionModel(sequelize, DataTypes)
+const Personnel = PersonnelModel(sequelize, DataTypes)
 
 const initDb = () => {
   return sequelize.sync({force: true}).then(_ => {
@@ -61,5 +65,5 @@ const initDb = () => {
 }
 
 module.exports = {
-  initDb, Region, User
+  initDb, Region, User, Fonction, Personnel
 }

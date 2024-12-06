@@ -20,12 +20,20 @@ require('./src/routes/findRegionByPk')(app)
 require('./src/routes/createRegion')(app)
 require('./src/routes/updateRegion')(app)
 require('./src/routes/deleteRegion')(app)
+
 require('./src/routes/login')(app)
+
 require('./src/routes/createUser')(app)
 require('./src/routes/findAllUsers')(app)
 require('./src/routes/deleteUser')(app)
 require('./src/routes/findUserByPk')(app)
 require('./src/routes/updateUser')(app)
+
+require('./src/routes/createFonction')(app)
+require('./src/routes/findAllFonctions')(app)
+require('./src/routes/deleteFonction')(app)
+require('./src/routes/findFonctionByPk')(app)
+require('./src/routes/updateFonction')(app)
 
 //gestion des erreurs 404
 app.use(({ res }) => {
