@@ -19,7 +19,7 @@ if(process.env.NODE_ENV === 'production'){
       dialectOptions: {
         timezone: 'Etc/GMT-2'
       },
-      logging: true
+      logging: (msg) => console.log(msg)//true
     }
   )
 }else{
@@ -41,7 +41,7 @@ if(process.env.NODE_ENV === 'production'){
 const Region = RegionModel(sequelize, DataTypes)
 const User = UserModel(sequelize, DataTypes)
 const Fonction = FonctionModel(sequelize, DataTypes)
-const Personnel = PersonnelModel(sequelize, DataTypes)
+const Personnel = PersonnelModel(sequelize, DataTypes, Fonction)
 
 const initDb = () => {
   return sequelize.sync({force: true}).then(_ => {

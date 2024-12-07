@@ -1,6 +1,8 @@
-const Fonction = require('./fonction')
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("Personnel", 
+
+const Fonction = require('./fonction');
+
+module.exports = (sequelize, DataTypes, Fonction) => {
+  const Personnel = sequelize.define("Personnel", 
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,23 +13,23 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "Le nom ne saurait être une chaîne vide."},
+          notEmpty: { msg: "Le nom ne saurait être une chaîne vide." },
           notNull: { msg: "Le nom est réquis." }
         }
       },
       prenom: {
-          type: DataTypes.STRING,
-          allowNull: true,
-          validate: {
-            notEmpty: { msg: "Le prénom ne saurait être une chaîne vide."}
-          }
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          notEmpty: { msg: "Le prénom ne saurait être une chaîne vide." }
+        }
       },
       matricule: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: { msg: "Ce matricule existe déjà." },
         validate: {
-          notEmpty: { msg: "Le matricule ne saurait être une chaîne vide."},
+          notEmpty: { msg: "Le matricule ne saurait être une chaîne vide." },
           notNull: { msg: "Le matricule est réquis." }
         }
       },
@@ -35,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "La langue ne saurait être une chaîne vide."},
+          notEmpty: { msg: "La langue ne saurait être une chaîne vide." },
           notNull: { msg: "La langue est réquise." }
         }
       },
@@ -43,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "La structure ne saurait être une chaîne vide."},
+          notEmpty: { msg: "La structure ne saurait être une chaîne vide." },
           notNull: { msg: "La structure est réquise." }
         }
       },
@@ -51,16 +53,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "Le grade ne saurait être une chaîne vide."},
-          notNull: { msg: "La grade est réquis." }
+          notEmpty: { msg: "Le grade ne saurait être une chaîne vide." },
+          notNull: { msg: "Le grade est réquis." }
         }
       },
       numtel: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "Le numéro de téléphone ne saurait être une chaîne vide."},
-          notNull: { msg: "La numéro de téléphone est réquis." }
+          notEmpty: { msg: "Le numéro de téléphone ne saurait être une chaîne vide." },
+          notNull: { msg: "Le numéro de téléphone est réquis." }
         }
       },
       fonctionId: {
@@ -77,17 +79,39 @@ module.exports = (sequelize, DataTypes) => {
         {
           unique: true,
           fields: ['nom', 'prenom'],
-          validate: {
-            customValidator(value) {
-              if (value.some(val => val === null)) {
-                throw new Error('Les champs nom et prénom ne peuvent pas être tous nuls.');
-              } else {
-                throw new Error('Une telle combinaison nom/prénom existe déjà.');
-              }
+          name: 'unique_nom_prenom'
+        }
+      ],
+      hooks: {
+        async beforeCreate(personnel, options) {
+          const existingPersonnel = await Personnel.findOne({
+            where: {
+              nom: personnel.nom,
+              prenom: personnel.prenom
             }
+          });
+          
+          if (existingPersonnel) {
+            throw new Error("Cette combinaison de nom et prénom existe déjà.");
+          }
+        },
+        async beforeUpdate(personnel, options) {
+          const existingPersonnel = await Personnel.findOne({
+            where: {
+              nom: personnel.nom,
+              prenom: personnel.prenom,
+              id: { [DataTypes.Op.ne]: personnel.id } // Exclude the current record by id
+            }
+          });
+
+          if (existingPersonnel) {
+            throw new Error("Cette combinaison de nom et prénom existe déjà.");
           }
         }
-      ]
+      }
     }
-  )
-}
+  );
+  
+  Personnel.belongsTo(Fonction, { foreignKey: 'fonctionId', as: 'fonction' });
+  return Personnel;
+};
