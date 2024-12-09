@@ -35,6 +35,18 @@ require('./src/routes/deleteFonction')(app)
 require('./src/routes/findFonctionByPk')(app)
 require('./src/routes/updateFonction')(app)
 
+require('./src/routes/createRole')(app)
+require('./src/routes/findAllRoles')(app)
+require('./src/routes/deleteRole')(app)
+require('./src/routes/findRoleByPk')(app)
+require('./src/routes/updateRole')(app)
+
+require('./src/routes/createPersonnel')(app)
+require('./src/routes/findAllPersonnels')(app)
+require('./src/routes/deletePersonnel')(app)
+require('./src/routes/findPersonnelByPk')(app)
+require('./src/routes/updatePersonnel')(app)
+
 //gestion des erreurs 404
 app.use(({ res }) => {
   const message = "Impossible de trouver la ressource demandée ! Vous pouvez essayer une autre URL."

@@ -1,8 +1,9 @@
 const { Sequelize, DataTypes } = require ('sequelize')
 const RegionModel = require('../models/region')
-const UserModel = require('../models/user')
 const FonctionModel = require('../models/fonction')
 const PersonnelModel = require('../models/personnel')
+const RoleModel = require('../models/role')
+const UserModel = require('../models/user')
 const regions = require('./regions')
 const bcrypt = require('bcrypt')
 
@@ -39,9 +40,10 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 const Region = RegionModel(sequelize, DataTypes)
-const User = UserModel(sequelize, DataTypes)
 const Fonction = FonctionModel(sequelize, DataTypes)
 const Personnel = PersonnelModel(sequelize, DataTypes, Fonction)
+const Role = RoleModel(sequelize, DataTypes)
+const User = UserModel(sequelize, DataTypes, Role, Personnel)
 
 const initDb = () => {
   return sequelize.sync({force: true}).then(_ => {
@@ -50,12 +52,15 @@ const initDb = () => {
         nom: region.nom
       }).then(reg => console.log(reg.toJSON()));
     })
+
+    Role.create({titre: "admin"}).then(role => console.log(role.toJSON()));
     
     bcrypt.hash('tapite69', 10)
     .then(hash => {
       User.create({
         username: 'tapite',
-        password: hash
+        password: hash,
+        roleId: 1
       }).then (user => console.log(user.toJSON()))
     })
     
@@ -65,5 +70,5 @@ const initDb = () => {
 }
 
 module.exports = {
-  initDb, Region, User, Fonction, Personnel
+  initDb, Region, Fonction, Personnel, Role, User,
 }

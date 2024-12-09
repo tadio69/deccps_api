@@ -19,11 +19,8 @@ module.exports = (app) => {
       })
     })
     .catch(error => {
-      if(error instanceof ValidationError){
-        return res.status(400).json({ message: error.message, data: error})
-      }
-      if(error instanceof UniqueConstraintError){
-        return res.status(400).json({ message: error.message, data: error})
+      if (error instanceof ValidationError || error instanceof UniqueConstraintError) {
+        return res.status(400).json({ message: error.message, data: error });
       }
       const message = `La fonction ${ req.body.nom } n'a pas pu être modifiée. Réessayez dans quelques instants.`
       res.status(500).json({ message, data: error })

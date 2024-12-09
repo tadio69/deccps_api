@@ -1,4 +1,3 @@
-
 const Fonction = require('./fonction');
 
 module.exports = (sequelize, DataTypes, Fonction) => {
@@ -14,7 +13,7 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         allowNull: false,
         validate: {
           notEmpty: { msg: "Le nom ne saurait être une chaîne vide." },
-          notNull: { msg: "Le nom est réquis." }
+          notNull: { msg: "Le nom est requis." }
         }
       },
       prenom: {
@@ -30,7 +29,7 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         unique: { msg: "Ce matricule existe déjà." },
         validate: {
           notEmpty: { msg: "Le matricule ne saurait être une chaîne vide." },
-          notNull: { msg: "Le matricule est réquis." }
+          notNull: { msg: "Le matricule est requis." }
         }
       },
       langue: {
@@ -38,7 +37,7 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         allowNull: false,
         validate: {
           notEmpty: { msg: "La langue ne saurait être une chaîne vide." },
-          notNull: { msg: "La langue est réquise." }
+          notNull: { msg: "La langue est requise." }
         }
       },
       structure: {
@@ -46,7 +45,7 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         allowNull: false,
         validate: {
           notEmpty: { msg: "La structure ne saurait être une chaîne vide." },
-          notNull: { msg: "La structure est réquise." }
+          notNull: { msg: "La structure est requise." }
         }
       },
       grade: {
@@ -54,7 +53,7 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         allowNull: false,
         validate: {
           notEmpty: { msg: "Le grade ne saurait être une chaîne vide." },
-          notNull: { msg: "Le grade est réquis." }
+          notNull: { msg: "Le grade est requis." }
         }
       },
       numtel: {
@@ -62,16 +61,16 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         allowNull: false,
         validate: {
           notEmpty: { msg: "Le numéro de téléphone ne saurait être une chaîne vide." },
-          notNull: { msg: "Le numéro de téléphone est réquis." }
+          notNull: { msg: "Le numéro de téléphone est requis." }
         }
       },
       fonctionId: {
         type: DataTypes.INTEGER,
+        allowNull: false, 
         references: {
           model: Fonction,
           key: 'id'
-        },
-        allowNull: false
+        }
       }
     },
     {
@@ -81,37 +80,39 @@ module.exports = (sequelize, DataTypes, Fonction) => {
           fields: ['nom', 'prenom'],
           name: 'unique_nom_prenom'
         }
-      ],
-      hooks: {
-        async beforeCreate(personnel, options) {
-          const existingPersonnel = await Personnel.findOne({
-            where: {
-              nom: personnel.nom,
-              prenom: personnel.prenom
-            }
-          });
-          
-          if (existingPersonnel) {
-            throw new Error("Cette combinaison de nom et prénom existe déjà.");
-          }
-        },
-        async beforeUpdate(personnel, options) {
-          const existingPersonnel = await Personnel.findOne({
-            where: {
-              nom: personnel.nom,
-              prenom: personnel.prenom,
-              id: { [DataTypes.Op.ne]: personnel.id } // Exclude the current record by id
-            }
-          });
-
-          if (existingPersonnel) {
-            throw new Error("Cette combinaison de nom et prénom existe déjà.");
-          }
-        }
-      }
+      ]
     }
   );
-  
+
+  // Associations
   Personnel.belongsTo(Fonction, { foreignKey: 'fonctionId', as: 'fonction' });
+  Fonction.hasMany(Personnel, { foreignKey: 'fonctionId', as: 'personnels' });
+
+  // Hooks
+  Personnel.addHook('beforeSave', async (personnel) => {
+    // Vérifier la combinaison unique de nom et prénom
+    const existingPersonnel = await Personnel.findOne({
+      where: {
+        nom: personnel.nom,
+        prenom: personnel.prenom,
+        id: { [sequelize.Op.ne]: personnel.id } // Exclure l'élément actuel lors de la mise à jour
+      }
+    });
+
+    if (existingPersonnel) {
+      throw new Error("Cette combinaison de nom et prénom existe déjà.");
+    }
+  });
+
+  Personnel.addHook('beforeSave', async (personnel) => {
+    // Vérifier si la fonction existe
+    if (personnel.fonctionId) {
+      const fonction = await Fonction.findByPk(personnel.fonctionId);
+      if (!fonction) {
+        throw new Error("La fonction spécifiée n'existe pas.");
+      }
+    }
+  });
+
   return Personnel;
 };

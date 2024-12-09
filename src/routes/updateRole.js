@@ -1,28 +1,28 @@
-const { Region } = require('../db/sequelize')
+const { Role } = require('../db/sequelize')
 const { ValidationError, UniqueConstraintError } = require('sequelize')
 const auth = require('../auth/auth') 
 
 module.exports = (app) => {
-  app.put('/api/regions/:id', auth, (req, res) => {
+  app.put('/api/roles/:id', auth, (req, res) => {
     const id = req.params.id
-    Region.update(req.body, {
+    Role.update(req.body, {
       where: { id: id }
     })
     .then(_ => {
-      return Region.findByPk(id).then(region => {
-        if(region === null){
-          const message = 'La région demandée n\'existe pas. Réessayez avec un autre identifiant.'
+      return Role.findByPk(id).then(role => {
+        if(role === null){
+          const message = 'Le rôle demandé n\'existe pas. Réessayez avec un autre identifiant.'
           return res.status(404).json({ message })
         }
-        const message = `La région ${region.nom} a bien été modifiée.` 
-        res.json({ message, data: region})
+        const message = `Le rôle ${role.titre} a bien été modifié.` 
+        res.json({ message, data: role})
       })
     })
     .catch(error => {
       if (error instanceof ValidationError || error instanceof UniqueConstraintError) {
         return res.status(400).json({ message: error.message, data: error });
       }
-      const message = `La région ${ req.body.nom } n'a pas pu être modifiée. Réessayez dans quelques instants.`
+      const message = `Le rôle ${ req.body.titre } n'a pas pu être modifié. Réessayez dans quelques instants.`
       res.status(500).json({ message, data: error })
     })
   })
