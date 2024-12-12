@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require ('sequelize')
 const RegionModel = require('../models/region')
+const DepartementModel = require('../models/departement')
 const FonctionModel = require('../models/fonction')
 const PersonnelModel = require('../models/personnel')
 const RoleModel = require('../models/role')
@@ -40,6 +41,7 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 const Region = RegionModel(sequelize, DataTypes)
+const Departement = DepartementModel(sequelize, DataTypes, Region)
 const Fonction = FonctionModel(sequelize, DataTypes)
 const Personnel = PersonnelModel(sequelize, DataTypes, Fonction)
 const Role = RoleModel(sequelize, DataTypes)
@@ -70,5 +72,5 @@ const initDb = () => {
 }
 
 module.exports = {
-  initDb, Region, Fonction, Personnel, Role, User,
+  initDb, Region, Fonction, Personnel, Role, User, Departement
 }

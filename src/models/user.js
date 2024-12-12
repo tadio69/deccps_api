@@ -31,7 +31,19 @@ module.exports = (sequelize, DataTypes, Role, Personnel) => {
                 model: Personnel,
                 key: 'id'
             },
-            allowNull: true // La clé étrangère est facultative
+            allowNull: true, // La clé étrangère est facultative
+            validate: {
+                notEmpty: { msg: "Le personnel ne saurait être vide." },
+                isExistingPersonnel: async function(value) {
+                    if (value === null || value === undefined) {
+                        return; // Pas besoin de valider si la valeur est null ou undefined
+                    }
+                    const personnel = await Personnel.findOne({ where: { id: value } });
+                    if (!personnel) {
+                      throw new Error(`Le personnel avec l'ID ${value} n'existe pas.`);
+                    }
+                  }
+            }
         },
         roleId: {
             type: DataTypes.INTEGER,
@@ -42,7 +54,13 @@ module.exports = (sequelize, DataTypes, Role, Personnel) => {
             allowNull: false, // Un User doit avoir un rôle
             validate: {
                 notEmpty: { msg: "Le rôle ne saurait être vide." },
-                notNull: { msg: "Le rôle est requis." }
+                notNull: { msg: "Le rôle est requis." },
+                isExistingRole: async function(value) {
+                    const role = await Role.findOne({ where: { id: value } });
+                    if (!role) {
+                      throw new Error(`Le rôle avec l'ID ${value} n'existe pas.`);
+                    }
+                  }
             }
         }
     });

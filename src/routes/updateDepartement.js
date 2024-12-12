@@ -1,20 +1,20 @@
-const { Personnel } = require('../db/sequelize')
+const { Departement } = require('../db/sequelize')
 const { ValidationError, UniqueConstraintError } = require('sequelize')
 const auth = require('../auth/auth') 
 
 module.exports = (app) => {
-  app.put('/api/personnels/:id', auth, (req, res) => {
+  app.put('/api/departements/:id', auth, (req, res) => {
     const id = req.params.id
-    Personnel.update(req.body, {
+    Departement.update(req.body, {
       where: { id: id }
     })
     .then(_ => {
-      return Personnel.findByPk(id).then(personnel => {
-        if(personnel === null){
-          const message = 'Le personnel demandé n\'existe pas. Réessayez avec un autre identifiant.'
+      return Departement.findByPk(id).then(departement => {
+        if(departement === null){
+          const message = 'Le département demandé n\'existe pas. Réessayez avec un autre identifiant.'
           return res.status(404).json({ message })
         }
-        const message = `Le personnel de nom  ${personnel.nom} ${personnel.prenom} a bien été modifié.` 
+        const message = `Le département de nom  ${departement.nom} a bien été modifié.` 
         res.json({ message, data: region})
       })
     })
@@ -22,7 +22,7 @@ module.exports = (app) => {
       if (error instanceof ValidationError || error instanceof UniqueConstraintError) {
         return res.status(400).json({ message: error.message, data: error });
       }
-      const message = `Le personnel de nom ${ req.body.nom } ${ req.body.prenom } n'a pas pu être modifié. Réessayez dans quelques instants.`
+      const message = `Le département ${ req.body.nom } n'a pas pu être modifié. Réessayez dans quelques instants.`
       res.status(500).json({ message, data: error })
     })
   })

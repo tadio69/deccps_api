@@ -1,4 +1,8 @@
+const { Op } = require('sequelize');
 const Fonction = require('./fonction');
+
+const NOM_PRENOM_UNIQUE_ERROR = 'Un personnel avec ce nom et prénom existe déjà.';
+const FONCTION_INEXISTANTE_ERROR = 'La fonction spécifiée n\'existe pas.';
 
 module.exports = (sequelize, DataTypes, Fonction) => {
   const Personnel = sequelize.define("Personnel", 
@@ -70,6 +74,17 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         references: {
           model: Fonction,
           key: 'id'
+        },
+        validate: {
+          isInt: { msg: "fonctionId doit être un entier valide." },
+          notNull: { msg: "fonctionId est requis." },
+          isExistingFonction: async function(value) {
+            if (!value) return; // Ignore si fonctionId est vide
+            const fonction = await Fonction.findOne({ where: { id: value } });
+            if (!fonction) {
+              throw new Error(`La fonction avec l'ID ${value} n'existe pas.`);
+            }
+          }
         }
       }
     },
@@ -80,39 +95,28 @@ module.exports = (sequelize, DataTypes, Fonction) => {
           fields: ['nom', 'prenom'],
           name: 'unique_nom_prenom'
         }
-      ]
+      ],
+      validate: {
+        nomPrenomUnique: async function() {
+          const personnel = this;
+          const count = await Personnel.count({
+            where: {
+              nom: personnel.nom,
+              prenom: personnel.prenom,
+              id: { [Op.ne]: personnel.id }
+            }
+          });
+          if (count > 0) {
+            throw new Error(`Le couple nom/prénom "${personnel.nom} ${personnel.prenom}" existe déjà.`);
+          }
+        }
+      }
     }
   );
 
   // Associations
   Personnel.belongsTo(Fonction, { foreignKey: 'fonctionId', as: 'fonction' });
   Fonction.hasMany(Personnel, { foreignKey: 'fonctionId', as: 'personnels' });
-
-  // Hooks
-  Personnel.addHook('beforeSave', async (personnel) => {
-    // Vérifier la combinaison unique de nom et prénom
-    const existingPersonnel = await Personnel.findOne({
-      where: {
-        nom: personnel.nom,
-        prenom: personnel.prenom,
-        id: { [sequelize.Op.ne]: personnel.id } // Exclure l'élément actuel lors de la mise à jour
-      }
-    });
-
-    if (existingPersonnel) {
-      throw new Error("Cette combinaison de nom et prénom existe déjà.");
-    }
-  });
-
-  Personnel.addHook('beforeSave', async (personnel) => {
-    // Vérifier si la fonction existe
-    if (personnel.fonctionId) {
-      const fonction = await Fonction.findByPk(personnel.fonctionId);
-      if (!fonction) {
-        throw new Error("La fonction spécifiée n'existe pas.");
-      }
-    }
-  });
 
   return Personnel;
 };

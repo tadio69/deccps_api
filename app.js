@@ -47,6 +47,12 @@ require('./src/routes/deletePersonnel')(app)
 require('./src/routes/findPersonnelByPk')(app)
 require('./src/routes/updatePersonnel')(app)
 
+require('./src/routes/createDepartement')(app)
+require('./src/routes/findAllDepartements')(app)
+require('./src/routes/deleteDepartement')(app)
+require('./src/routes/findDepartementByPk')(app)
+require('./src/routes/updateDepartement')(app)
+
 //gestion des erreurs 404
 app.use(({ res }) => {
   const message = "Impossible de trouver la ressource demandée ! Vous pouvez essayer une autre URL."
