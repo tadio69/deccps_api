@@ -1,7 +1,5 @@
 const Region = require('./region');
 
-const REGION_INEXISTANTE_ERROR = 'La région spécifiée n\'existe pas.';
-
 module.exports = (sequelize, DataTypes, Region) => {
   const Departement = sequelize.define("Departement", 
     {
@@ -13,6 +11,7 @@ module.exports = (sequelize, DataTypes, Region) => {
       nom: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: { msg: "Ce nom existe déjà." },
         validate: {
           notEmpty: { msg: "Le nom ne saurait être une chaîne vide." },
           notNull: { msg: "Le nom est requis." }
@@ -37,6 +36,11 @@ module.exports = (sequelize, DataTypes, Region) => {
           }
         }
       }
+    },
+    {
+      timestamps: true,
+      createdAt: "created",
+      updatedAt: false,
     }
   );
 

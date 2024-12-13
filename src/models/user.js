@@ -63,7 +63,13 @@ module.exports = (sequelize, DataTypes, Role, Personnel) => {
                   }
             }
         }
-    });
+    },
+    {
+        timestamps: true,
+        createdAt: "created",
+        updatedAt: false,
+    }
+);
 
     // Définir les relations après la déclaration des modèles
     User.associate = (models) => {

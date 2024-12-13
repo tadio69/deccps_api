@@ -15,7 +15,7 @@ module.exports = (app) => {
           return res.status(404).json({ message })
         }
         const message = `Le département de nom  ${departement.nom} a bien été modifié.` 
-        res.json({ message, data: region})
+        res.json({ message, data: departement})
       })
     })
     .catch(error => {

@@ -53,6 +53,19 @@ require('./src/routes/deleteDepartement')(app)
 require('./src/routes/findDepartementByPk')(app)
 require('./src/routes/updateDepartement')(app)
 
+require('./src/routes/createEtablissement')(app)
+require('./src/routes/findAllEtablissements')(app)
+require('./src/routes/deleteEtablissement')(app)
+require('./src/routes/findEtablissementByPk')(app)
+require('./src/routes/updateEtablissement')(app)
+
+require('./src/routes/createExamen')(app)
+require('./src/routes/findAllExamens')(app)
+require('./src/routes/deleteExamen')(app)
+require('./src/routes/findExamenByPk')(app)
+require('./src/routes/updateExamen')(app)
+
+
 //gestion des erreurs 404
 app.use(({ res }) => {
   const message = "Impossible de trouver la ressource demandée ! Vous pouvez essayer une autre URL."

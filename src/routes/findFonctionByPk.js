@@ -6,7 +6,7 @@ module.exports = (app) => {
     Fonction.findByPk(req.params.id)
       .then(fonction => {
         if(fonction === null){
-          const message = 'La fonction demandée n\'existe pas. Réessayez avec un autre identifiant.'
+          const message = `La fonction demandée n\'existe pas. Réessayez avec un autre identifiant.`
           return res.status(404).json({ message })
         }
         const message = `La fonction de nom ${fonction.nom} a bien éte trouvée.`

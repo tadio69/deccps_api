@@ -23,7 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: "Le sigle est réquis." }
       }
     }
-  });
+  },
+  {
+    timestamps: true,
+    createdAt: "created",
+    updatedAt: false,
+  }
+);
 
   return Fonction; // Retourne le modèle Fonction
 };

@@ -5,7 +5,7 @@ module.exports = (app) => {
   app.delete('/api/fonctions/:id', auth, (req, res) => {
     Fonction.findByPk(req.params.id).then(fonction => {
       if(fonction === null){
-        const message = 'La fonction demandée n\'existe pas. Réessayez avec un autre identifiant.'
+        const message = `La fonction demandée n\'existe pas. Réessayez avec un autre identifiant.`
         return res.status(404).json({ message })
       }
 

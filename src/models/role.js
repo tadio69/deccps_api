@@ -14,7 +14,13 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: "Le titre est réquis." }
       }
     }
-  });
+  },
+  {
+    timestamps: true,
+    createdAt: "created",
+    updatedAt: false,
+  }
+);
 
   return Role; // Retourne le modèle Role
 };

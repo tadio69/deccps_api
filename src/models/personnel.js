@@ -1,9 +1,6 @@
 const { Op } = require('sequelize');
 const Fonction = require('./fonction');
 
-const NOM_PRENOM_UNIQUE_ERROR = 'Un personnel avec ce nom et prénom existe déjà.';
-const FONCTION_INEXISTANTE_ERROR = 'La fonction spécifiée n\'existe pas.';
-
 module.exports = (sequelize, DataTypes, Fonction) => {
   const Personnel = sequelize.define("Personnel", 
     {
@@ -87,6 +84,11 @@ module.exports = (sequelize, DataTypes, Fonction) => {
           }
         }
       }
+    },
+    {
+      timestamps: true,
+      createdAt: "created",
+      updatedAt: false,
     },
     {
       indexes: [

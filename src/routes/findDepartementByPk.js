@@ -10,7 +10,7 @@ module.exports = (app) => {
           return res.status(404).json({ message })
         }
         const message = `Le département ${departement.nom} a bien éte trouvé.`
-        res.json({ message, data: personnel })
+        res.json({ message, data: departement })
       })
       .catch(error => {
         const message = `Le département demandé n'a pas pu être récupéré. Réessayez dans quelques instants.`
