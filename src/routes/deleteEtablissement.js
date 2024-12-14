@@ -5,7 +5,7 @@ module.exports = (app) => {
   app.delete('/api/etablissements/:id', auth, (req, res) => {
     Etablissement.findByPk(req.params.id).then(etablissement => {
       if(etablissement === null){
-        const message = `L'établissement demandé n\'existe pas. Réessayez avec un autre identifiant.`
+        const message = `L'établissement demandé n'existe pas. Réessayez avec un autre identifiant.`
         return res.status(404).json({ message })
       }
 

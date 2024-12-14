@@ -9,6 +9,8 @@ const UserModel = require('../models/user')
 const ExamenModel = require('../models/examen')
 const regions = require('./regions')
 const bcrypt = require('bcrypt')
+const SessionModel = require('../models/session')
+const OptionModel = require('../models/option')
 
 let sequelize
 
@@ -50,6 +52,8 @@ const Personnel = PersonnelModel(sequelize, DataTypes, Fonction)
 const Role = RoleModel(sequelize, DataTypes)
 const User = UserModel(sequelize, DataTypes, Role, Personnel)
 const Examen = ExamenModel(sequelize, DataTypes)
+const Session = SessionModel(sequelize, DataTypes)
+const Option = OptionModel(sequelize, DataTypes, Examen)
 
 const initDb = () => {
   return sequelize.sync({force: true}).then(_ => {
@@ -76,5 +80,5 @@ const initDb = () => {
 }
 
 module.exports = {
-  initDb, Region, Fonction, Personnel, Role, User, Departement, Etablissement, Examen
+  initDb, Region, Fonction, Personnel, Role, User, Departement, Etablissement, Examen, Session, Option
 }
