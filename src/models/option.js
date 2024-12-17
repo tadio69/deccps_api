@@ -1,6 +1,6 @@
 const Examen = require('./examen');
 
-module.exports = (sequelize, DataTypes, Examen) => {
+module.exports = (sequelize, DataTypes) => {
   const Option = sequelize.define("Option", 
     {
       id: {
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes, Examen) => {
         type: DataTypes.INTEGER,
         allowNull: false, 
         references: {
-          model: Examen,
+          model: "Examens",
           key: 'id'
         },
         validate: {
@@ -67,8 +67,12 @@ module.exports = (sequelize, DataTypes, Examen) => {
   );
 
   // Associations
-  Option.belongsTo(Examen, { foreignKey: 'examenId', as: 'examen' });
-  Examen.hasMany(Option, { foreignKey: 'examenId', as: 'options' });
+  Option.associate = (models) => {
+    Option.belongsTo(Examen, { 
+      foreignKey: 'examenId', 
+      as: 'examen' });
+  }
+  
 
   return Option;
 };

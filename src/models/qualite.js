@@ -1,17 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
-  const Fonction = sequelize.define('Fonction', {
+  const Qualite = sequelize.define('Qualite', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    nom: {
+    titre: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: { msg: "Ce nom existe déjà." },
+      unique: { msg: "Ce titre existe déjà." },
       validate: {
-        notEmpty: { msg: "Le nom ne saurait être une chaîne vide."},
-        notNull: { msg: "Le nom est réquis." }
+        notEmpty: { msg: "Le titre ne saurait être une chaîne vide."},
+        notNull: { msg: "Le titre est réquis." }
       }
     },
     sigle: {
@@ -31,10 +31,5 @@ module.exports = (sequelize, DataTypes) => {
   }
 );
 
-  Fonction.associate = (models) => {
-    Fonction.hasMany(models.Personnel, { 
-      foreignKey: 'fonctionId', 
-      as: 'personnels' });
-  };
-  return Fonction; // Retourne le modèle Fonction
+  return Qualite;
 };

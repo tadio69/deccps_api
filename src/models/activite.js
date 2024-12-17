@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Role = sequelize.define('Role', {
+  const Activite = sequelize.define('Activite', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -21,13 +21,6 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: false,
   }
 );
-
-  // Un Role peut avoir plusieurs Users
-  Role.associate = (models) => {
-    Role.hasMany(models.User, { 
-      foreignKey: 'roleId', 
-      as: 'users' });
-  };
   
-  return Role; // Retourne le modèle Role
+  return Activite; 
 };

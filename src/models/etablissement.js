@@ -1,6 +1,6 @@
 const Departement = require('./departement');
 
-module.exports = (sequelize, DataTypes, Departement) => {
+module.exports = (sequelize, DataTypes) => {
   const Etablissement = sequelize.define("Etablissement", 
     {
       id: {
@@ -62,7 +62,7 @@ module.exports = (sequelize, DataTypes, Departement) => {
         type: DataTypes.INTEGER,
         allowNull: false, 
         references: {
-          model: Departement,
+          model: "Departements", // Nom de la table associée,
           key: 'id'
         },
         validate: {
@@ -86,8 +86,11 @@ module.exports = (sequelize, DataTypes, Departement) => {
   );
 
   // Associations
-  Etablissement.belongsTo(Departement, { foreignKey: 'departementId', as: 'departement' });
-  Departement.hasMany(Etablissement, { foreignKey: 'departementId', as: 'etablissements' });
+  Etablissement.associate = (models) => {
+    Etablissement.belongsTo(models.Departement, { 
+      foreignKey: 'departementId', 
+      as: 'departement' });
+  }
 
   return Etablissement;
 };

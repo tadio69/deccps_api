@@ -86,6 +86,34 @@ require('./src/routes/deleteOption')(app)
 require('./src/routes/findOptionByPk')(app)
 require('./src/routes/updateOption')(app)
 
+//Activite
+require('./src/routes/createActivite')(app)
+require('./src/routes/findAllActivites')(app)
+require('./src/routes/deleteActivite')(app)
+require('./src/routes/findActiviteByPk')(app)
+require('./src/routes/updateActivite')(app)
+
+//Rubrique
+require('./src/routes/createRubrique')(app)
+require('./src/routes/findAllRubriques')(app)
+require('./src/routes/deleteRubrique')(app)
+require('./src/routes/findRubriqueByPk')(app)
+require('./src/routes/updateRubrique')(app)
+
+//Qualite
+require('./src/routes/createQualite')(app)
+require('./src/routes/findAllQualites')(app)
+require('./src/routes/deleteQualite')(app)
+require('./src/routes/findQualiteByPk')(app)
+require('./src/routes/updateQualite')(app)
+
+//Parametre
+require('./src/routes/createParametre')(app)
+require('./src/routes/findAllParametres')(app)
+require('./src/routes/deleteParametre')(app)
+require('./src/routes/findParametreByPk')(app)
+require('./src/routes/updateParametre')(app)
+
 //gestion des erreurs 404
 app.use(({ res }) => {
   const message = "Impossible de trouver la ressource demandée ! Vous pouvez essayer une autre URL."

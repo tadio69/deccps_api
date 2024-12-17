@@ -1,7 +1,7 @@
 const Role = require('./role');
 const Personnel = require('./personnel');
 
-module.exports = (sequelize, DataTypes, Role, Personnel) => {
+module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         id: {
             type: DataTypes.INTEGER,
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes, Role, Personnel) => {
         personnelId: {
             type: DataTypes.INTEGER,
             references: {
-                model: Personnel,
+                model: "Personnels", // Nom de la table associée
                 key: 'id'
             },
             allowNull: true, // La clé étrangère est facultative
@@ -48,19 +48,29 @@ module.exports = (sequelize, DataTypes, Role, Personnel) => {
         roleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: Role,
+                model: "Roles", // Nom de la table associée
                 key: 'id'
             },
             allowNull: false, // Un User doit avoir un rôle
             validate: {
                 notEmpty: { msg: "Le rôle ne saurait être vide." },
                 notNull: { msg: "Le rôle est requis." },
+                // isExistingRole: async function(value) {
+                //     const role = await Role.findOne({ where: { id: value } });
+                //     if (!role) {
+                //       throw new Error(`Le rôle avec l'ID ${value} n'existe pas.`);
+                //     }
+                // }
                 isExistingRole: async function(value) {
-                    const role = await Role.findOne({ where: { id: value } });
-                    if (!role) {
-                      throw new Error(`Le rôle avec l'ID ${value} n'existe pas.`);
-                    }
-                  }
+                const user = this; // Access the current User instance
+                if (value === null || value === undefined) {
+                  return; // No need to validate if null or undefined
+                }
+                const role = await user.role; // Access associated role through 'role'
+                if (!role) {
+                  throw new Error(`Le rôle avec l'ID ${value} n'existe pas.`);
+                }
+              }
             }
         }
     },
@@ -79,22 +89,10 @@ module.exports = (sequelize, DataTypes, Role, Personnel) => {
             as: 'personnel'
         });
 
-        // Un Personnel peut avoir 0 ou 1 User
-        models.Personnel.hasOne(User, {
-            foreignKey: 'personnelId',
-            as: 'user'
-        });
-
         // Un User a un rôle
         User.belongsTo(models.Role, {
             foreignKey: 'roleId',
             as: 'role'
-        });
-
-        // Un Role peut avoir plusieurs Users
-        models.Role.hasMany(User, {
-            foreignKey: 'roleId',
-            as: 'users'
         });
     };
 

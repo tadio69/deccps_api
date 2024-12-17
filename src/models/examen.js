@@ -63,5 +63,12 @@ module.exports = (sequelize, DataTypes) => {
   }
 );
 
+  // Associations
+  Examen.associate = (models) => {
+    Examen.hasMany(models.Option, { 
+      foreignKey: 'examenId', 
+      as: 'options' });
+  }
+
   return Examen;
 };

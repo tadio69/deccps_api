@@ -1,6 +1,6 @@
-const Region = require('./region');
+const Region = require('./region')
 
-module.exports = (sequelize, DataTypes, Region) => {
+module.exports = (sequelize, DataTypes) => {
   const Departement = sequelize.define("Departement", 
     {
       id: {
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes, Region) => {
         type: DataTypes.INTEGER,
         allowNull: false, 
         references: {
-          model: Region,
+          model: "Regions", // Nom de la table associée
           key: 'id'
         },
         validate: {
@@ -45,8 +45,16 @@ module.exports = (sequelize, DataTypes, Region) => {
   );
 
   // Associations
-  Departement.belongsTo(Region, { foreignKey: 'regionId', as: 'region' });
-  Region.hasMany(Departement, { foreignKey: 'regionId', as: 'departements' });
+  Departement.associate = (models) => {
+    Departement.belongsTo(models.Region, {
+      foreignKey: "regionId",
+      as: "region",
+    });
+    Departement.hasMany(models.Etablissement, {
+      foreignKey: "departementId",
+      as: "etablissements",
+    });
+  };
 
   return Departement;
 };

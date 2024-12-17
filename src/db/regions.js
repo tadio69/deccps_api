@@ -1,11 +1,11 @@
 const regions =[
   {
     id:1,
-    nom: "OUEST"
+    nom: "LITTORAL"
   },
   {
     id:2,
-    nom: "CENTRE"
+    nom: "NORD-OUEST"
   },
   {
     id:3,
@@ -13,7 +13,7 @@ const regions =[
   },
   {
     id:4,
-    nom: "NORD-OUEST"
+    nom: "CENTRE"
   },
   {
     id:5,
@@ -21,7 +21,7 @@ const regions =[
   },
   {
     id:6,
-    nom: "LITTORAL"
+    nom: "OUEST"
   },
   {
     id:7,

@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const Fonction = require('./fonction');
 
-module.exports = (sequelize, DataTypes, Fonction) => {
+module.exports = (sequelize, DataTypes) => {
   const Personnel = sequelize.define("Personnel", 
     {
       id: {
@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes, Fonction) => {
         type: DataTypes.INTEGER,
         allowNull: false, 
         references: {
-          model: Fonction,
+          model: "Fonctions", // Nom de la table associée
           key: 'id'
         },
         validate: {
@@ -117,8 +117,16 @@ module.exports = (sequelize, DataTypes, Fonction) => {
   );
 
   // Associations
-  Personnel.belongsTo(Fonction, { foreignKey: 'fonctionId', as: 'fonction' });
-  Fonction.hasMany(Personnel, { foreignKey: 'fonctionId', as: 'personnels' });
+  Personnel.associate = (models) => {
+    Personnel.belongsTo(models.Fonction, { 
+      foreignKey: 'fonctionId', 
+      as: 'fonction' });
+    // Un Personnel peut avoir 0 ou 1 User
+    Personnel.hasOne(models.User, {
+      foreignKey: 'personnelId',
+      as: 'user'
+    });
+  };
 
   return Personnel;
 };

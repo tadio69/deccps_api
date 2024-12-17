@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("Region", 
+  const Region = sequelize.define("Region", 
     {
       id: {
         type: DataTypes.INTEGER,
@@ -22,5 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: false,
     }
   );
+
+  Region.associate = (models) => {
+    Region.hasMany(models.Departement, {
+      foreignKey: "regionId",
+      as: "departements",
+    });
+  };
+
   return Region;
-}
+};
